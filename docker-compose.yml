@@ -1,13 +1,14 @@
+version: "3.8"
 services:
-  application:
-    build:
-      context: .
+  app:
+    build: .
     ports:
       - 3000:3000
     env_file:
-      - .env
+      - .env.local
     volumes:
       - .:/app
       - /app/node_modules
+    command: bun run dev
 # docker compose up --build - using docker compose
 
