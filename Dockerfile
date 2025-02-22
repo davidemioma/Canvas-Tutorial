@@ -1,13 +1,13 @@
-FROM oven/bun:1.0.30
+FROM oven/bun:latest
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json bun.lockb* ./
 
-RUN bun install
+RUN bun install --frozen-lockfile
 
 COPY . .
 
 EXPOSE 3000
 
-CMD bun run dev
+CMD ["bun", "run", "dev"]
