@@ -4,10 +4,10 @@ import React from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Poppins } from "next/font/google";
-import { OrganizationSwitcher } from "@clerk/nextjs";
-import { LayoutDashboard, StarIcon } from "lucide-react";
 import { buttonVariants } from "./ui/button";
 import { useSearchParams } from "next/navigation";
+import { OrganizationSwitcher } from "@clerk/nextjs";
+import { LayoutDashboard, StarIcon } from "lucide-react";
 
 const font = Poppins({
   subsets: ["latin"],
@@ -17,7 +17,7 @@ const font = Poppins({
 const OrgSidebar = () => {
   const searchParams = useSearchParams();
 
-  const favorite = searchParams.get("favorite");
+  const favorites = searchParams.get("favorites");
 
   return (
     <div className="hidden lg:flex flex-col gap-6 w-[205px] h-screen pt-5 pl-5">
@@ -55,7 +55,7 @@ const OrgSidebar = () => {
           className={cn(
             buttonVariants({
               size: "lg",
-              variant: favorite ? "ghost" : "secondary",
+              variant: favorites ? "ghost" : "secondary",
               className: "font-normal justify-start px-2 w-full",
             })
           )}
@@ -68,13 +68,13 @@ const OrgSidebar = () => {
           href={{
             pathname: "/",
             query: {
-              favorite: true,
+              favorites: true,
             },
           }}
           className={cn(
             buttonVariants({
               size: "lg",
-              variant: favorite ? "secondary" : "ghost",
+              variant: favorites ? "secondary" : "ghost",
               className: "font-normal justify-start px-2 w-full",
             })
           )}

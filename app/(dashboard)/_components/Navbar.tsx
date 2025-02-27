@@ -1,10 +1,17 @@
 "use client";
 
 import React from "react";
+import InviteBtn from "./InviteBtn";
 import SearchInput from "./SearchInput";
-import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
+import {
+  OrganizationSwitcher,
+  useOrganization,
+  UserButton,
+} from "@clerk/nextjs";
 
 const Navbar = () => {
+  const { organization } = useOrganization();
+
   return (
     <div className="flex items-center gap-4 p-5">
       <div className="hidden lg:flex lg:flex-1">
@@ -36,6 +43,8 @@ const Navbar = () => {
           }}
         />
       </div>
+
+      {organization && <InviteBtn />}
 
       <UserButton />
     </div>

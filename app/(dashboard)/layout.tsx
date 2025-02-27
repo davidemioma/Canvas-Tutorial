@@ -15,7 +15,7 @@ export default function DashboardLayout({
         <div className="h-full flex gap-3">
           <OrgSidebar />
 
-          <div className="h-full flex-1">
+          <div className="h-full flex-1 border-l">
             <Navbar />
 
             {children}
