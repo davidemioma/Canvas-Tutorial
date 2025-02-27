@@ -1,18 +1,14 @@
 "use client";
 
 import React from "react";
-import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import BoardCard from "./BoardCard";
 import EmptyState from "./EmptyState";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Button } from "@/components/ui/button";
+import useApiMutation from "@/hooks/use-api-mutation";
 import { Clipboard, SearchX, Star } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 type Props = {
   orgId: string;
@@ -23,9 +19,17 @@ type Props = {
 };
 
 const BoardList = ({ orgId, query }: Props) => {
-  const data = [];
+  const data = useQuery(api.boards.getBoards, {
+    orgId,
+  });
 
-  if (data.length === 0 && query.search) {
+  const { isPending, mutation } = useApiMutation(api.board.createBoard);
+
+  if (data === undefined) {
+    return <div>Loading...</div>;
+  }
+
+  if (data?.length === 0 && query.search) {
     return (
       <EmptyState
         message="No result found!"
@@ -36,7 +40,7 @@ const BoardList = ({ orgId, query }: Props) => {
     );
   }
 
-  if (data.length === 0 && query.favorites) {
+  if (data?.length === 0 && query.favorites) {
     return (
       <EmptyState
         message="No favorites boards!"
@@ -47,29 +51,34 @@ const BoardList = ({ orgId, query }: Props) => {
     );
   }
 
-  if (data.length === 0) {
+  if (data?.length === 0) {
     return (
       <EmptyState
         message="No Boards available!"
         subText="Create your first board."
         footer={
           <div className="mt-6">
-            <Dialog>
-              <DialogTrigger className={cn(buttonVariants({ size: "lg" }))}>
-                Create Board
-              </DialogTrigger>
+            <Button
+              onClick={() => {
+                if (!orgId) return;
 
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Are you absolutely sure?</DialogTitle>
+                mutation({
+                  orgId,
+                  title: "Untitled",
+                })
+                  .then(() => {
+                    toast.success("Board Created!");
+                  })
+                  .catch((err) => {
+                    console.error("Error creating board", err);
 
-                  <DialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
-                  </DialogDescription>
-                </DialogHeader>
-              </DialogContent>
-            </Dialog>
+                    toast.error("Failed to create board");
+                  });
+              }}
+              disabled={isPending}
+            >
+              {isPending ? "Creating..." : "Create Board"}
+            </Button>
           </div>
         }
       >
@@ -80,7 +89,15 @@ const BoardList = ({ orgId, query }: Props) => {
 
   return (
     <div>
-      BoardList {orgId} {JSON.stringify(query)}
+      <h1 className="text-2xl md:text-3xl font-semibold">
+        {query.favorites ? "Favorite" : "Team"} Boards
+      </h1>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 mt-8 pb-10">
+        {data.map((board) => (
+          <BoardCard key={board._id} board={board} />
+        ))}
+      </div>
     </div>
   );
 };
