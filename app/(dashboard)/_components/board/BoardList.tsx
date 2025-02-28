@@ -2,13 +2,14 @@
 
 import React from "react";
 import { toast } from "sonner";
-import BoardCard from "./BoardCard";
+import NewBoard from "./NewBoard";
 import EmptyState from "./EmptyState";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import useApiMutation from "@/hooks/use-api-mutation";
 import { Clipboard, SearchX, Star } from "lucide-react";
+import BoardCard, { BoardCardSkeleton } from "./BoardCard";
 
 type Props = {
   orgId: string;
@@ -26,7 +27,19 @@ const BoardList = ({ orgId, query }: Props) => {
   const { isPending, mutation } = useApiMutation(api.board.createBoard);
 
   if (data === undefined) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <h1 className="text-2xl md:text-3xl font-semibold">
+          {query.favorites ? "Favorite" : "Team"} Boards
+        </h1>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 mt-8 pb-10">
+          {new Array(6).fill("").map((_, i) => (
+            <BoardCardSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
   }
 
   if (data?.length === 0 && query.search) {
@@ -94,6 +107,8 @@ const BoardList = ({ orgId, query }: Props) => {
       </h1>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5 mt-8 pb-10">
+        <NewBoard orgId={orgId} />
+
         {data.map((board) => (
           <BoardCard key={board._id} board={board} />
         ))}

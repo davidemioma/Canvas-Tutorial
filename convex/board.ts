@@ -41,3 +41,22 @@ export const createBoard = mutation({
     return board;
   },
 });
+
+export const deleteBoard = mutation({
+  args: {
+    id: v.id("boards"),
+  },
+  handler: async (ctx, args) => {
+    // Auth
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Unauthorised");
+    }
+
+    // delete favorites
+
+    // delete Board
+    await ctx.db.delete(args.id);
+  },
+});
