@@ -2,9 +2,11 @@
 
 import React from "react";
 import { toast } from "sonner";
-import { Link2, Trash2 } from "lucide-react";
 import { api } from "@/convex/_generated/api";
+import { Link2, Pencil, Trash2 } from "lucide-react";
 import useApiMutation from "@/hooks/use-api-mutation";
+import useRenameBoard from "@/hooks/use-rename-board";
+import useDeleteBoard from "@/hooks/use-delete-board";
 import { DropdownMenuContentProps } from "@radix-ui/react-dropdown-menu";
 import {
   DropdownMenu,
@@ -22,6 +24,10 @@ type Props = {
 };
 
 const Actions = ({ children, id, title, side, sideOffset }: Props) => {
+  const { onOpen } = useRenameBoard();
+
+  const { onOpen: onOpenDelete } = useDeleteBoard();
+
   const { mutation, isPending } = useApiMutation(api.board.deleteBoard);
 
   const onCopyLink = () => {
@@ -68,11 +74,28 @@ const Actions = ({ children, id, title, side, sideOffset }: Props) => {
 
         <DropdownMenuItem
           className="p-3 cursor-pointer"
-          disabled={isPending}
-          onClick={onDelete}
+          onClick={() => {
+            onOpenDelete({
+              id,
+              title: "Delete Board",
+              description: "This will delete the board permanently.",
+              onContinue: onDelete,
+              disabled: isPending,
+            });
+          }}
         >
           <Trash2 className="w-4 h-4 mr-1" />
           Delete
+        </DropdownMenuItem>
+
+        <DropdownMenuItem
+          className="p-3 cursor-pointer"
+          onClick={() => {
+            onOpen({ id, title });
+          }}
+        >
+          <Pencil className="w-4 h-4 mr-1" />
+          Rename
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

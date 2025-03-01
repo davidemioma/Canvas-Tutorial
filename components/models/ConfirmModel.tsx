@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import useDeleteBoard from "@/hooks/use-delete-board";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,19 +14,34 @@ import {
 } from "@/components/ui/alert-dialog";
 
 const ConfirmModel = () => {
+  const { isOpen, onClose, title, description, disabled, onContinue } =
+    useDeleteBoard();
+
   return (
-    <AlertDialog>
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>
+            {title || "Are you absolutely sure?"}
+          </AlertDialogTitle>
+
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            {description ||
+              "This action cannot be undone. This will permanently delete your data from our servers."}
           </AlertDialogDescription>
         </AlertDialogHeader>
+
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogCancel disabled={disabled}>Cancel</AlertDialogCancel>
+
+          <AlertDialogAction
+            onClick={() => {
+              onContinue();
+            }}
+            disabled={disabled}
+          >
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
