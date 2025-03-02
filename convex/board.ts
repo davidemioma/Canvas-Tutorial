@@ -55,6 +55,16 @@ export const deleteBoard = mutation({
     }
 
     // delete favorites
+    const existingFavorite = await ctx.db
+      .query("userFavorites")
+      .withIndex("by_user_board", (q) =>
+        q.eq("userId", identity.subject).eq("boardId", args.id)
+      )
+      .unique();
+
+    if (existingFavorite) {
+      await ctx.db.delete(existingFavorite._id);
+    }
 
     // delete Board
     await ctx.db.delete(args.id);
@@ -101,5 +111,35 @@ export const favoriteAction = mutation({
     if (!identity) {
       throw new Error("Unauthorised");
     }
+
+    // Get board
+    const board = await ctx.db.get(args.id);
+
+    if (!board) {
+      throw new Error("Board not found!");
+    }
+
+    // Check if board is in user favourites
+    const userId = identity.subject;
+
+    const existingFavorite = await ctx.db
+      .query("userFavorites")
+      .withIndex("by_user_board", (q) =>
+        q.eq("userId", userId).eq("boardId", board._id)
+      )
+      .unique();
+
+    // If it's exist then delete
+    if (existingFavorite) {
+      await ctx.db.delete(existingFavorite._id);
+
+      return;
+    }
+
+    await ctx.db.insert("userFavorites", {
+      userId,
+      orgId: args.orgId,
+      boardId: board._id,
+    });
   },
 });

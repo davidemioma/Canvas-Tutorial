@@ -8,4 +8,5 @@ export type BoardType = {
   authorId: string;
   authorName: string;
   imageUrl: string;
+  isFavourite: boolean;
 };

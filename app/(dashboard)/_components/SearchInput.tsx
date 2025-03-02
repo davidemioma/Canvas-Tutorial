@@ -14,28 +14,24 @@ const SearchInput = () => {
   const [debounceValue, setDebounceValue] = useState("");
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
+    const timer = setTimeout(() => {
       setDebounceValue(value);
-    }, 500);
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [value]);
-
-  useEffect(() => {
-    const url = qs.stringifyUrl(
-      {
-        url: "/",
-        query: {
-          search: debounceValue,
+      const url = qs.stringifyUrl(
+        {
+          url: "/",
+          query: {
+            search: debounceValue,
+          },
         },
-      },
-      { skipEmptyString: true, skipNull: true }
-    );
+        { skipEmptyString: true, skipNull: true }
+      );
 
-    router.push(url);
-  }, [debounceValue, router]);
+      router.push(url);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [value, debounceValue, router]);
 
   return (
     <div className="relative w-full max-w-[520px] flex items-center gap-3">
@@ -48,10 +44,15 @@ const SearchInput = () => {
         onChange={(e) => setValue(e.target.value)}
       />
 
-      <XIcon
-        className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
-        onClick={() => setValue("")}
-      />
+      {value.length > 0 && (
+        <button
+          className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"
+          type="button"
+          onClick={() => setValue("")}
+        >
+          <XIcon className="size-4" />
+        </button>
+      )}
     </div>
   );
 };

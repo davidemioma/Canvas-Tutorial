@@ -3,6 +3,7 @@
 import React from "react";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { api } from "@/convex/_generated/api";
 import BtnSpinner from "@/components/BtnSpinner";
 import useApiMutation from "@/hooks/use-api-mutation";
@@ -12,6 +13,8 @@ type Props = {
 };
 
 const NewBoard = ({ orgId }: Props) => {
+  const router = useRouter();
+
   const { mutation, isPending } = useApiMutation(api.board.createBoard);
 
   const onClick = () => {
@@ -19,8 +22,10 @@ const NewBoard = ({ orgId }: Props) => {
       orgId,
       title: "Untitled",
     })
-      .then(() => {
+      .then((id) => {
         toast.success("Board Created!");
+
+        router.push(`/boards/${id}`);
       })
       .catch((err) => {
         console.error("Create Board Err: ", err);
