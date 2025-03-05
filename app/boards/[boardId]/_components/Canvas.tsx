@@ -12,7 +12,7 @@ type Props = {
 const Canvas = ({ boardId }: Props) => {
   return (
     <div className="relative bg-neutral-100 w-full h-full touch-none">
-      <Info />
+      <Info boardId={boardId} />
 
       <Participants />
 

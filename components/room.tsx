@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
+
 import {
   LiveblocksProvider,
   RoomProvider,
@@ -15,9 +16,7 @@ type Props = {
 
 export const Room = ({ children, roomId, fallback }: Props) => {
   return (
-    <LiveblocksProvider
-      publicApiKey={process.env.NEXT_PUBLIC_LIVEBLOCK_PUBLIC_KEY as string}
-    >
+    <LiveblocksProvider authEndpoint="/api/liveblocks-auth">
       <RoomProvider id={roomId}>
         <ClientSideSuspense fallback={fallback}>{children}</ClientSideSuspense>
       </RoomProvider>

@@ -7,6 +7,7 @@ import { Link2, Pencil, Trash2 } from "lucide-react";
 import useApiMutation from "@/hooks/use-api-mutation";
 import useRenameBoard from "@/hooks/use-rename-board";
 import useDeleteBoard from "@/hooks/use-delete-board";
+import { usePathname, useRouter } from "next/navigation";
 import { DropdownMenuContentProps } from "@radix-ui/react-dropdown-menu";
 import {
   DropdownMenu,
@@ -24,6 +25,10 @@ type Props = {
 };
 
 const Actions = ({ children, id, title, side, sideOffset }: Props) => {
+  const router = useRouter();
+
+  const pathname = usePathname();
+
   const { onOpen } = useRenameBoard();
 
   const { onOpen: onOpenDelete } = useDeleteBoard();
@@ -47,6 +52,10 @@ const Actions = ({ children, id, title, side, sideOffset }: Props) => {
     })
       .then(() => {
         toast.success("Board Deleted!");
+
+        if (pathname.includes("/boards")) {
+          router.push("/");
+        }
       })
       .catch((err) => {
         console.error("Delete Board Err: ", err);
