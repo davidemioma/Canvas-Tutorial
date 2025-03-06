@@ -11,6 +11,9 @@ declare global {
         picture: string;
       };
     };
+    Presence: {
+      cursor: { x: number; y: number } | null;
+    };
   }
 }
 

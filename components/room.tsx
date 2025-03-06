@@ -17,7 +17,12 @@ type Props = {
 export const Room = ({ children, roomId, fallback }: Props) => {
   return (
     <LiveblocksProvider authEndpoint="/api/liveblocks-auth">
-      <RoomProvider id={roomId}>
+      <RoomProvider
+        id={roomId}
+        initialPresence={{
+          cursor: null,
+        }}
+      >
         <ClientSideSuspense fallback={fallback}>{children}</ClientSideSuspense>
       </RoomProvider>
     </LiveblocksProvider>
