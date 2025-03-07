@@ -27,7 +27,7 @@ const Cursor = memo(({ connectionId }: Props) => {
         transform: `translateX(${cursor.x}px) translateY(${cursor.y}px)`,
       }}
       height={50}
-      width={50}
+      width={name.length * 10 + 24}
     >
       <MousePointer2
         className="w-5 h-5"
@@ -36,6 +36,13 @@ const Cursor = memo(({ connectionId }: Props) => {
           color: getBorderColor(connectionId),
         }}
       />
+
+      <div
+        className="absolute left-5 px-1.5 py-0.5 text-white text-xs font-semibold rounded-md"
+        style={{ backgroundColor: getBorderColor(connectionId) }}
+      >
+        {name}
+      </div>
     </foreignObject>
   );
 });

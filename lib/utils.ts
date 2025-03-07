@@ -1,3 +1,4 @@
+import { Camera } from "@/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -21,3 +22,20 @@ const COLORS = [
 export const getBorderColor = (connId: number): string => {
   return COLORS[connId % COLORS.length];
 };
+
+export const pointerEventToCursorPoint = ({
+  e,
+  camera,
+}: {
+  e: React.PointerEvent;
+  camera: Camera;
+}) => {
+  const point = {
+    x: Math.round(e.clientX) - camera.x,
+    y: Math.round(e.clientY) - camera.y,
+  };
+
+  return point;
+};
+
+export const MAX_LAYERS = 100;

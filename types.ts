@@ -110,6 +110,13 @@ export type XYWH = {
   height: number;
 };
 
+export type Layer =
+  | Rectangelelayer
+  | Ellipselayer
+  | Pathlayer
+  | Textlayer
+  | Notelayer;
+
 export type CanvasState =
   | {
       mode: CanvasMode.None;
@@ -125,7 +132,11 @@ export type CanvasState =
     }
   | {
       mode: CanvasMode.Inserting;
-      layerType: LayerType;
+      layerType:
+        | LayerType.Rectangle
+        | LayerType.Ellipse
+        | LayerType.Text
+        | LayerType.Note;
     }
   | {
       mode: CanvasMode.Pencil;
