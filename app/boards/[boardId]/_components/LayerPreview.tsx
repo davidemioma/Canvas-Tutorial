@@ -7,7 +7,7 @@ import { useStorage } from "@liveblocks/react/suspense";
 
 type Props = {
   id: string;
-  onLayerPointDown: ({ e, id }: { e: React.PointerEvent; id: string }) => void;
+  onLayerPointDown: (e: React.PointerEvent, layerId: string) => void;
   selectionColor?: string;
 };
 
