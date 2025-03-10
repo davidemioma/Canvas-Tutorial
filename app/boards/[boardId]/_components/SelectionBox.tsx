@@ -6,7 +6,7 @@ import { useStorage, useSelf } from "@liveblocks/react/suspense";
 import { useSelectionBounds } from "@/hooks/use-selection-bounds";
 
 type Props = {
-  onResizeHandlePointerDown: (corner: Side, initialBounds: XYWH) => void;
+  onResizeHandlePointerDown: (corner: Side, intialBound: XYWH) => void;
 };
 
 const HANDLE_WIDTH = 8;
@@ -52,7 +52,8 @@ const SelectionBox = ({ onResizeHandlePointerDown }: Props) => {
             onPointerDown={(e) => {
               e.stopPropagation();
 
-              // Add resize handler
+              // Add top left resize handler
+              onResizeHandlePointerDown(Side.Top + Side.Left, bounds);
             }}
           />
 
@@ -69,7 +70,8 @@ const SelectionBox = ({ onResizeHandlePointerDown }: Props) => {
             onPointerDown={(e) => {
               e.stopPropagation();
 
-              // Add resize handler
+              // Add top resize handler
+              onResizeHandlePointerDown(Side.Top, bounds);
             }}
           />
 
@@ -86,7 +88,8 @@ const SelectionBox = ({ onResizeHandlePointerDown }: Props) => {
             onPointerDown={(e) => {
               e.stopPropagation();
 
-              // Add resize handler
+              // Add top right resize handler
+              onResizeHandlePointerDown(Side.Top + Side.Right, bounds);
             }}
           />
 
@@ -103,7 +106,8 @@ const SelectionBox = ({ onResizeHandlePointerDown }: Props) => {
             onPointerDown={(e) => {
               e.stopPropagation();
 
-              // Add resize handler
+              // Add right resize handler
+              onResizeHandlePointerDown(Side.Right, bounds);
             }}
           />
 
@@ -120,7 +124,8 @@ const SelectionBox = ({ onResizeHandlePointerDown }: Props) => {
             onPointerDown={(e) => {
               e.stopPropagation();
 
-              // Add resize handler
+              // Add bottom right resize handler
+              onResizeHandlePointerDown(Side.Bottom + Side.Right, bounds);
             }}
           />
 
@@ -137,7 +142,8 @@ const SelectionBox = ({ onResizeHandlePointerDown }: Props) => {
             onPointerDown={(e) => {
               e.stopPropagation();
 
-              // Add resize handler
+              // Add bottom resize handler
+              onResizeHandlePointerDown(Side.Bottom, bounds);
             }}
           />
 
@@ -154,7 +160,8 @@ const SelectionBox = ({ onResizeHandlePointerDown }: Props) => {
             onPointerDown={(e) => {
               e.stopPropagation();
 
-              // Add resize handler
+              // Add bottom left resize handler
+              onResizeHandlePointerDown(Side.Bottom + Side.Left, bounds);
             }}
           />
 
@@ -171,7 +178,8 @@ const SelectionBox = ({ onResizeHandlePointerDown }: Props) => {
             onPointerDown={(e) => {
               e.stopPropagation();
 
-              // Add resize handler
+              // Add left resize handler
+              onResizeHandlePointerDown(Side.Left, bounds);
             }}
           />
         </>
