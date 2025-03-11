@@ -7,6 +7,7 @@ import Toolbar from "./Toolbar";
 import LayerPreview from "./LayerPreview";
 import Participants from "./Participants";
 import SelectionBox from "./SelectionBox";
+import SelectionTools from "./SelectionTools";
 import { LiveObject } from "@liveblocks/client";
 import CursorsPresence from "./CursorsPresence";
 import {
@@ -14,6 +15,7 @@ import {
   MAX_LAYERS,
   pointerEventToCursorPoint,
   resizeBounds,
+  SELECTION_NET_THRESHOLD,
 } from "@/lib/utils";
 import {
   Camera,
@@ -131,6 +133,38 @@ const Canvas = ({ boardId }: Props) => {
     }
   }, []);
 
+  // Triggers multi-selection
+  const startMultiSelection = useCallback(
+    ({ current, origin }: { current: Point; origin: Point }) => {
+      // This is just a treshhold to know when to activate selection net.
+      if (
+        Math.abs(current.x - origin.x) + Math.abs(current.y - origin.y) >
+        SELECTION_NET_THRESHOLD
+      ) {
+        setCanvasState({
+          mode: CanvasMode.SelectionNet,
+          current,
+          origin,
+        });
+      }
+    },
+    []
+  );
+
+  // Handles multi-selection
+  const handleMultiSelection = useMutation(
+    ({ storage, setMyPresencee }, current: Point, origin: Point) => {
+      const layers = storage.get("layers").toImmutable();
+
+      setCanvasState({
+        mode: CanvasMode.SelectionNet,
+        current,
+        origin,
+      });
+    },
+    []
+  );
+
   // To track mouse movement for every user in the board
   const onPointerMove = useMutation(
     ({ setMyPresence }, e: React.PointerEvent) => {
@@ -138,7 +172,11 @@ const Canvas = ({ boardId }: Props) => {
 
       const current = pointerEventToCursorPoint({ e, camera });
 
-      if (canvasState.mode === CanvasMode.Translating) {
+      if (canvasState.mode === CanvasMode.Pressing) {
+        startMultiSelection({ current, origin: canvasState.origin });
+      } else if (canvasState.mode === CanvasMode.SelectionNet) {
+        handleMultiSelection(current, canvasState.origin);
+      } else if (canvasState.mode === CanvasMode.Translating) {
         translatingSelectedLayers(current);
       } else if (canvasState.mode === CanvasMode.Resizing) {
         resizeSelectedLayer(current);
@@ -311,6 +349,8 @@ const Canvas = ({ boardId }: Props) => {
         redo={history.redo}
         undo={history.undo}
       />
+
+      <SelectionTools camera={camera} setLastUsedColor={setLastUsedColor} />
 
       <svg
         className="w-screen h-screen"

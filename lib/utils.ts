@@ -40,6 +40,8 @@ export const pointerEventToCursorPoint = ({
 
 export const MAX_LAYERS = 100;
 
+export const SELECTION_NET_THRESHOLD = 5;
+
 export const colorToCss = (color: Color) => {
   return `#${color.r.toString(16).padStart(2, "0")}${color.g.toString(16).padStart(2, "0")}${color.b.toString(16).padStart(2, "0")}`;
 };
@@ -86,3 +88,5 @@ export const resizeBounds = ({
 
   return result;
 };
+
+export const findIntersectingLayersWithRectangle = () => {};
