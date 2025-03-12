@@ -1,7 +1,10 @@
 "use client";
 
 import React, { memo } from "react";
+import Text from "./layers/Text";
+import Note from "./layers/Note";
 import { LayerType } from "@/types";
+import Ellipse from "./layers/Ellipse";
 import Rectangle from "./layers/Rectangle";
 import { useStorage } from "@liveblocks/react/suspense";
 
@@ -27,11 +30,32 @@ const LayerPreview = memo(({ id, onLayerPointDown, selectionColor }: Props) => {
         />
       );
     case LayerType.Ellipse:
-      return <div>Ellipse</div>;
+      return (
+        <Ellipse
+          id={id}
+          layer={layer}
+          onPointerDown={onLayerPointDown}
+          selectionColor={selectionColor}
+        />
+      );
     case LayerType.Text:
-      return <div>Text</div>;
+      return (
+        <Text
+          id={id}
+          layer={layer}
+          onPointerDown={onLayerPointDown}
+          selectionColor={selectionColor}
+        />
+      );
     case LayerType.Note:
-      return <div>Note</div>;
+      return (
+        <Note
+          id={id}
+          layer={layer}
+          onPointerDown={onLayerPointDown}
+          selectionColor={selectionColor}
+        />
+      );
     default:
       console.warn("Invalid layer type");
 

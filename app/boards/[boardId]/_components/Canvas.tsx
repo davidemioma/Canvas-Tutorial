@@ -11,6 +11,7 @@ import SelectionTools from "./SelectionTools";
 import { LiveObject } from "@liveblocks/client";
 import CursorsPresence from "./CursorsPresence";
 import {
+  findIntersectingLayersWithRectangle,
   getBorderColor,
   MAX_LAYERS,
   pointerEventToCursorPoint,
@@ -153,7 +154,7 @@ const Canvas = ({ boardId }: Props) => {
 
   // Handles multi-selection
   const handleMultiSelection = useMutation(
-    ({ storage, setMyPresencee }, current: Point, origin: Point) => {
+    ({ storage, setMyPresence }, current: Point, origin: Point) => {
       const layers = storage.get("layers").toImmutable();
 
       setCanvasState({
@@ -161,8 +162,17 @@ const Canvas = ({ boardId }: Props) => {
         current,
         origin,
       });
+
+      const ids = findIntersectingLayersWithRectangle(
+        layers,
+        layerIds,
+        origin,
+        current
+      );
+
+      setMyPresence({ selection: ids });
     },
-    []
+    [layerIds]
   );
 
   // To track mouse movement for every user in the board
@@ -371,6 +381,17 @@ const Canvas = ({ boardId }: Props) => {
           ))}
 
           <SelectionBox onResizeHandlePointerDown={onResizeHandlePointerDown} />
+
+          {canvasState.mode === CanvasMode.SelectionNet &&
+            canvasState.current && (
+              <rect
+                className="fill-blue-500/50 stroke-blue-500 stroke-1"
+                x={Math.min(canvasState.origin.x, canvasState.current.x)}
+                y={Math.min(canvasState.origin.y, canvasState.current.y)}
+                width={Math.abs(canvasState.origin.x - canvasState.current.x)}
+                height={Math.abs(canvasState.origin.y - canvasState.current.y)}
+              />
+            )}
 
           <CursorsPresence />
         </g>

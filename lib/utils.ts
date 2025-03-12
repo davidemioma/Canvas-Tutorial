@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Camera, Color, Point, Side, XYWH } from "@/types";
+import { Camera, Color, Layer, Point, Side, XYWH } from "@/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -89,4 +89,63 @@ export const resizeBounds = ({
   return result;
 };
 
-export const findIntersectingLayersWithRectangle = () => {};
+export const findIntersectingLayersWithRectangle = (
+  layers: ReadonlyMap<string, Layer>,
+  layersIds: readonly string[],
+  a: Point,
+  b: Point
+) => {
+  const rect = {
+    x: Math.min(a.x, b.x),
+    y: Math.min(a.y, b.y),
+    width: Math.abs(a.x - b.x),
+    height: Math.abs(a.y - b.y),
+  };
+
+  const ids: string[] = [];
+
+  for (const layerId of layersIds) {
+    const layer = layers.get(layerId);
+
+    if (!layer) continue;
+
+    const { x, y, width, height } = layer;
+
+    if (
+      rect.x + rect.width > x &&
+      rect.x < x + width &&
+      rect.y + rect.height > y &&
+      rect.y < y + height
+    ) {
+      ids.push(layerId);
+    }
+  }
+
+  return ids;
+};
+
+export const calculateFontSize = ({
+  width,
+  height,
+  isNote,
+}: {
+  width: number;
+  height: number;
+  isNote?: boolean;
+}) => {
+  const maxFontSize = 96;
+
+  const scaleFactor = isNote ? 0.15 : 0.5;
+
+  const fontWidth = width * scaleFactor;
+
+  const fontHeight = height * scaleFactor;
+
+  return Math.min(fontHeight, fontWidth, maxFontSize);
+};
+
+export const getConstractingTextColor = (color: Color) => {
+  const luminance = 0.299 * color.r + 0.587 * color.g + 0.114 * color.b;
+
+  return luminance > 182 ? "black" : "white";
+};
