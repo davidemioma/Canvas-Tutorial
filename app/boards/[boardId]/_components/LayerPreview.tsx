@@ -1,6 +1,7 @@
 "use client";
 
 import React, { memo } from "react";
+import Path from "./layers/Path";
 import Text from "./layers/Text";
 import Note from "./layers/Note";
 import { LayerType } from "@/types";
@@ -54,6 +55,15 @@ const LayerPreview = memo(({ id, onLayerPointDown, selectionColor }: Props) => {
           layer={layer}
           onPointerDown={onLayerPointDown}
           selectionColor={selectionColor}
+        />
+      );
+    case LayerType.Path:
+      return (
+        <Path
+          id={id}
+          layer={layer}
+          onPointerDown={onLayerPointDown}
+          stroke={selectionColor}
         />
       );
     default:

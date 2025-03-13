@@ -1,7 +1,7 @@
 // Define Liveblocks types for your application
 // https://liveblocks.io/docs/api-reference/liveblocks-react#Typing-your-data
 
-import { Layer } from "./types";
+import { Color, Layer } from "./types";
 import { LiveList, LiveMap, LiveObject } from "@liveblocks/client";
 
 declare global {
@@ -17,6 +17,8 @@ declare global {
     Presence: {
       cursor: { x: number; y: number } | null;
       selection: string[];
+      pencilDraft: [x: number, y: number, pressure: number][] | null;
+      penColor: Color | null;
     };
     Storage: {
       layers: LiveMap<string, LiveObject<Layer>>;

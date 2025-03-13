@@ -7,7 +7,7 @@ export const useLayerPostion = () => {
     ({ storage }) => {
       const layersIds = storage.get("layersIds");
 
-      const arr = layersIds.toArray();
+      const arr = layersIds.toImmutable();
 
       const indicies: number[] = [];
 
@@ -28,7 +28,7 @@ export const useLayerPostion = () => {
     ({ storage }) => {
       const layersIds = storage.get("layersIds");
 
-      const arr = layersIds.toArray();
+      const arr = layersIds.toImmutable();
 
       const indicies: number[] = [];
 
